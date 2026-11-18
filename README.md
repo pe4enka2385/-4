@@ -1,7 +1,40 @@
 # Лаб4
 # 1. Просмотр сетевых настроек
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/321a78be-3110-4b4b-8a80-ffa6350a13c1" />
-#  2. Управление IP-адресами
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/110ab15a-1385-4c4f-b33d-90c6a3f487a2" />
+![src1](https://github.com/user-attachments/assets/321a78be-3110-4b4b-8a80-ffa6350a13c1)
+# 2. Управление IP-адресами
+![src1](https://github.com/user-attachments/assets/110ab15a-1385-4c4f-b33d-90c6a3f487a2)
 # 3. Управление интерфейсами и ARP
 # 3.1 Включение/выключение интерфейса
+![src1](https://github.com/user-attachments/assets/12550615-9594-4cb3-9d29-b6cd30ea1467)
+# 3.2 Просмотр ARP-таблицы.
+![src1](https://github.com/user-attachments/assets/90896440-f193-4de1-9797-8c64d026563e)
+# 3.3 Добавление статической записи. 
+![src1](https://github.com/user-attachments/assets/9a06c9c3-9978-42ee-a726-f50b32819586)
+# 4. Управление маршрутизацией
+# 4.1 Добавление маршрута.
+![src1](https://github.com/user-attachments/assets/a6745fd1-ed6b-4668-aa0a-2ef79d2bcfa3)
+# 4.2 Удаление маршрута.
+![src1](https://github.com/user-attachments/assets/ed7be804-9a17-45ba-b29e-682c5fbacf88)
+# 5 Конфигурирование через файлы `/etc/` 
+![src1](https://github.com/user-attachments/assets/ff22d25e-0bea-451c-9018-5f92e2f53b83)
+Командой просмотрел файл настройки сети.
+# Контрольные вопросы:
+# 1. В чем основное отличие утилиты `ip` от устаревшей `ifconfig`?
+Отличие ip от ifconfig: ip работает с ядром через современный интерфейс Netlink (а не устаревший ioctl), заменяет сразу несколько утилит (ifconfig, route, arp) и поддерживает несколько IP-адресов на одном интерфейсе без виртуальных псевдонимов (eth0:1)
+# 2. Какая команда позволяет посмотреть только статические IP-адреса на интерфейсе `eth0`? 
+Только статические IP на eth0: ip addr show dev eth0 permanent (или ip a s eth0 permanent).
+# 3 Как с помощью `ip` временно изменить MAC-адрес интерфейса? Какие шаги для этого необходимы?
+Временная смена MAC-адреса (3 шага):
+	• Отключить интерфейс: sudo ip link set dev eth0 down
+	• Сменить адрес: sudo ip link set dev eth0 address XX:XX:XX:XX:XX:XX
+	• Включить интерфейс: sudo ip link set dev eth0 up
+# 4  Что произойдет с сетевым соединением, если выполнить команду `ip link set dev eth0 down`?
+Эффект от ip link set dev eth0 down: Интерфейс программно отключится, трафик через него мгновенно прекратится, а все активные соединения (например, SSH) разорвутся.
+# 5  Для чего используется таблица ARP? Как просмотреть и очистить её с помощью утилиты `ip`? 
+5. Таблица ARP: Нужна для сопоставления логических IP-адресов с физическими MAC-адресами в локальной сети.
+	• Просмотр: ip neigh show
+	• Очистка: sudo ip neigh flush all (или dev eth0 для конкретного интерфейса)
+# 6 В каком файле в Debian/Ubuntu хранятся основные настройки сетевых интерфейсов при использовании классической службы `networking`? 
+Файл настроек в Debian/Ubuntu: /etc/network/interfaces
+# 7  Почему изменения, внесенные командой `ip addr add`, исчезают после перезагрузки системы? Как сделать их постоянными?
+Почему настройки сбрасываются и как сохранить: Команда ip меняет параметры только в оперативной памяти ядра. Чтобы сделать их постоянными, нужно прописать настройки на диск в конфигурационные файлы сетевого менеджера: /etc/network/interfaces (для networking), YAML-файлы в /etc/netplan/ (для Ubuntu) или через nmcli (для NetworkManager).
